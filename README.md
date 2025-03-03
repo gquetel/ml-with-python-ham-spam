@@ -9,3 +9,14 @@ This repository was created to gain a better understanding of the existing Machi
 The project use a Spam/Ham dataset foudn on [Kaggle](https://www.kaggle.com/datasets/bagavathypriya/spam-ham-dataset), manually selected features were extracted from messages using [spacy](https://spacy.io/).
 
 
+## Running model trainings
+
+A [shell.nix](shell.nix) file is provided with all required packages (and a pinned version). To run trainings, enter the provided nix-shell environement and execute the [train.py](train.py) script:
+
+```bash 
+# cd ml-with-python-ham-spam
+nix-shell 
+python3 train.py
+```
+
+
