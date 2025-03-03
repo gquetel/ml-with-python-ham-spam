@@ -1,7 +1,8 @@
+import logging
 import numpy as np
+
 from settings import RANDOM_STATE
 from src.models.model import Model
-import logging
 from src.utils.visualize import plot_errors_by_epoch
 
 logger = logging.getLogger(__name__)
@@ -9,18 +10,22 @@ logger = logging.getLogger(__name__)
 
 class Perceptron(Model):
     def __init__(
-        self, lr: float, epochs: int, random_state: int = RANDOM_STATE
+        self,
+        lr: float,
+        epochs: int,
+        name: str = "Perceptron",
+        random_state: int = RANDOM_STATE,
     ):
         self.lr = lr
         self.epochs = epochs
         self.rs = random_state
-        self._name = "Perceptron"
+        self._name = name
         self._w = None
         self._b = None
         self._errors = None
 
     def fit(self, X: np.ndarray, y: np.ndarray):
-        rgen = np.random.RandomState(self.rs)
+        rgen = np.random.default_rng(self.rs)
         self._w = rgen.normal(loc=0.0, scale=0.01, size=X.shape[1])
         self._b = 0
         self._errors = []

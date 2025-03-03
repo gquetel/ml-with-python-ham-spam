@@ -6,7 +6,6 @@ from settings import RANDOM_STATE
 
 logger = logging.getLogger(__name__)
 
-
 class HamSpamDataset:
     """A Dataset class for Ham Spam message classification."""
 
@@ -61,7 +60,6 @@ class HamSpamDataset:
         ):
             token_count = len(doc)
             char_count = len(doc.text)
-            sentences_count = len(list(doc.sents))
             exclam_count = doc.text.count("!")
             question_count = doc.text.count("?")
             uppercase_count = sum(1 for c in doc.text if c.isupper())
@@ -81,23 +79,18 @@ class HamSpamDataset:
 
             ent_count = len(ent_types)
             avg_tok_len = char_count / token_count if token_count > 0 else 0
-            avg_sent_len = (
-                token_count / sentences_count if sentences_count > 0 else 0
-            )
             upper_ratio = uppercase_count / char_count if char_count > 0 else 0
             money_count = ent_types.get("MONEY", 0)
 
             feature = {
                 "token_count": token_count,
                 "char_count": char_count,
-                "sentences_count": sentences_count,
                 "exclam_count": exclam_count,
                 "question_count": question_count,
                 "uppercase_count": uppercase_count,
                 "url_count": url_count,
                 "ent_count": ent_count,
                 "avg_tok_len": avg_tok_len,
-                "avg_sent_len": avg_sent_len,
                 "upper_ratio": upper_ratio,
                 "money_count": money_count,
             }

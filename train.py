@@ -1,11 +1,15 @@
 import logging
 import pandas as pd
+import numpy as np
 import sys
 
 from src.data.make_dataset import HamSpamDataset
+
 from src.models.perceptron import Perceptron
+from src.models.adaline import Adaline, AdalineSGD
+
 from src.models.model import Model
-from settings import BASE_PATH
+from settings import BASE_PATH, RANDOM_STATE
 
 logger = logging.getLogger(__name__)
 
@@ -54,7 +58,19 @@ def eval_model(model: Model, df_train: pd.DataFrame, df_test: pd.DataFrame):
 def main():
     init_logger()
     df_train, df_test = init_dataset()
-    models = [Perceptron(0.1, 100)]
+
+    models = [
+        Perceptron(0.01, 100),
+        Adaline(0.00005, 20),
+        Adaline(
+            0.1,
+            20,
+            use_feature_standardization=True,
+            name="Adaline_feature_std",
+        ),
+        AdalineSGD(0.01, 20),
+    ]
+
     for model in models:
         eval_model(model, df_train, df_test)
 

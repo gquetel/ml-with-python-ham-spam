@@ -3,15 +3,21 @@ import numpy as np
 
 
 class Model(ABC):
-    def __init__(self):
-        self._name = "Model"
+    def __init__(self, name: str = "Model"):
+        self._name = name
 
     @property
     def name(self):
         return self._name
-
+    
     @abstractmethod
-    def fit(self, X, y):
+    def fit(self, X: np.ndarray, y: np.ndarray):
+        """Fit the model to the given data.
+
+        Args:
+            X (np.ndarray): Training vectors
+            y (np.ndarray): Target values
+        """
         pass
 
     @abstractmethod

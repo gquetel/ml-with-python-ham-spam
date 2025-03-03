@@ -8,6 +8,8 @@ __pycache__/
 
 .vscode
 output
+data/iris.csv
+src/data/make_dataset_iris.py
 
 # Distribution / packaging
 .Python
