@@ -66,7 +66,7 @@ def main():
             0.1,
             20,
             use_feature_standardization=True,
-            name="Adaline_feature_std",
+            name="Adaline-feature-std",
         ),
         AdalineSGD(0.01, 20),
     ]

@@ -5,6 +5,10 @@ from settings import RANDOM_STATE
 from src.models.model import Model
 from src.utils.visualize import plot_errors_by_epoch
 
+from sklearn.preprocessing import StandardScaler
+from sklearn.linear_model import Perceptron as skPerceptron
+from sklearn.metrics import accuracy_score
+
 logger = logging.getLogger(__name__)
 
 
@@ -56,3 +60,27 @@ class Perceptron(Model):
         predictions = self.predict(X)
         errors = np.sum(predictions != y)
         logger.info(f"Misclassification errors: {errors}")
+
+
+class PerceptronSklearn(Model):
+    def __init__(
+        self,
+        lr: float,
+        epochs : int,
+        name: str = "Perceptron-sklearn",
+        random_state: int = RANDOM_STATE,
+    ):
+        self._name = name
+        self._model = skPerceptron(eta0=lr, max_iter=epochs, random_state=random_state)
+        self._scaler = StandardScaler()
+
+    def fit(self, X : np.ndarray, y:  np.ndarray):
+        """ Fit the model to the given data.
+        Before fitting the model, the features are standardized using the  StandardScaler class from sklearn.
+
+        Args:
+            X (np.ndarray): Training vectors
+            y (np.ndarray): Target values
+        """
+        X_std = self._scaler.fit_transform(X)
+        self._model.fit(X_std, y)
