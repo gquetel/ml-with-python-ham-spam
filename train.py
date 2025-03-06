@@ -5,7 +5,7 @@ import sys
 
 from src.data.make_dataset import HamSpamDataset
 
-from src.models.perceptron import Perceptron
+from src.models.perceptron import Perceptron, PerceptronSklearn
 from src.models.adaline import Adaline, AdalineSGD
 
 from src.models.model import Model
@@ -60,7 +60,7 @@ def main():
     df_train, df_test = init_dataset()
 
     models = [
-        Perceptron(0.01, 100),
+        Perceptron(0.01, 20),
         Adaline(0.00005, 20),
         Adaline(
             0.1,
@@ -69,6 +69,7 @@ def main():
             name="Adaline-feature-std",
         ),
         AdalineSGD(0.01, 20),
+        PerceptronSklearn(0.01,20)
     ]
 
     for model in models:

@@ -66,7 +66,7 @@ class PerceptronSklearn(Model):
     def __init__(
         self,
         lr: float,
-        epochs : int,
+        epochs: int,
         name: str = "Perceptron-sklearn",
         random_state: int = RANDOM_STATE,
     ):
@@ -74,8 +74,8 @@ class PerceptronSklearn(Model):
         self._model = skPerceptron(eta0=lr, max_iter=epochs, random_state=random_state)
         self._scaler = StandardScaler()
 
-    def fit(self, X : np.ndarray, y:  np.ndarray):
-        """ Fit the model to the given data.
+    def fit(self, X: np.ndarray, y: np.ndarray):
+        """Fit the model to the given data.
         Before fitting the model, the features are standardized using the  StandardScaler class from sklearn.
 
         Args:
@@ -84,3 +84,21 @@ class PerceptronSklearn(Model):
         """
         X_std = self._scaler.fit_transform(X)
         self._model.fit(X_std, y)
+
+    def predict(self, X: np.ndarray) -> np.ndarray:
+        """Classify samples X.
+
+        Args:
+            X (np.ndarray): Samples to predict.
+
+        Returns:
+            np.ndarray: Predictions
+        """
+        X_std = self._scaler.transform(X)
+        return self._model.predict(X_std)
+
+    def predict_and_evaluate(self, X: np.ndarray, y: np.ndarray):
+        y_preds = self.predict(X)
+        errors = np.sum(y_preds != y)
+        logger.info(f"Misclassification errors: {errors}")
+        logger.info(f"Accuracy: {"%.3f" % accuracy_score(y,y_preds)}")
