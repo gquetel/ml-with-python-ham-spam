@@ -63,6 +63,8 @@ class Perceptron(Model):
 
 
 class PerceptronSklearn(Model):
+    """A wrapper class relying on the Perceptron class implemented by sklearn. Adds a feature normalization step."""
+
     def __init__(
         self,
         lr: float,

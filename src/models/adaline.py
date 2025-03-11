@@ -15,13 +15,13 @@ class Adaline(Model):
         lr: float,
         epochs: int,
         name : str = "Adaline",
-        use_feature_standardization: bool = False,
+        standardize: bool = False,
         random_state: int = RANDOM_STATE,
     ):
         self.lr = lr
         self.epochs = epochs
         self.rs = random_state
-        self.use_feature_standardization = use_feature_standardization
+        self.use_feature_standardization = standardize
         self._name = name   
         self._w = None
         self._b = None

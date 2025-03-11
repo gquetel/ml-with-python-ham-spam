@@ -7,9 +7,10 @@ from src.data.make_dataset import HamSpamDataset
 
 from src.models.perceptron import Perceptron, PerceptronSklearn
 from src.models.adaline import Adaline, AdalineSGD
+from src.models.logress import LogisticRegression
 
 from src.models.model import Model
-from settings import BASE_PATH, RANDOM_STATE
+from settings import BASE_PATH
 
 logger = logging.getLogger(__name__)
 
@@ -65,11 +66,13 @@ def main():
         Adaline(
             0.1,
             20,
-            use_feature_standardization=True,
-            name="Adaline-feature-std",
+            standardize=True,
+            name="Adaline-std",
         ),
         AdalineSGD(0.01, 20),
-        PerceptronSklearn(0.01,20)
+        PerceptronSklearn(0.01, 20),
+        LogisticRegression(0.001, 20),
+        LogisticRegression(0.1, 20, standardize=True, name="Logistic-Regression-std"),
     ]
 
     for model in models:
