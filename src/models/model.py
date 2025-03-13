@@ -30,7 +30,7 @@ class Model(ABC):
         pass
 
     @abstractmethod
-    def predict_and_evaluate(self, X: np.ndarray, y: np.ndarray):
+    def predict_and_evaluate(self, X: np.ndarray, y: np.ndarray) -> np.ndarray:
         """Predicts the labels for the given inputs and compute evaluation metrics or plots depending on the model.
 
         Args:

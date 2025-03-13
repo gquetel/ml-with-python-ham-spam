@@ -60,6 +60,7 @@ class Perceptron(Model):
         predictions = self.predict(X)
         errors = np.sum(predictions != y)
         logger.info(f"Misclassification errors: {errors}")
+        return predictions
 
 
 class PerceptronSklearn(Model):
@@ -100,7 +101,8 @@ class PerceptronSklearn(Model):
         return self._model.predict(X_std)
 
     def predict_and_evaluate(self, X: np.ndarray, y: np.ndarray):
-        y_preds = self.predict(X)
-        errors = np.sum(y_preds != y)
+        predictions = self.predict(X)
+        errors = np.sum(predictions != y)
         logger.info(f"Misclassification errors: {errors}")
-        logger.info(f"Accuracy: {"%.3f" % accuracy_score(y,y_preds)}")
+        logger.info(f"Accuracy: {"%.3f" % accuracy_score(y,predictions)}")
+        return predictions

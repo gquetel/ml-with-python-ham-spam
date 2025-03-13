@@ -103,3 +103,4 @@ class LogisticRegression(Model):
         predictions = self.predict(X)
         errors = np.sum(predictions != y)
         logger.info(f"Misclassification errors: {errors}")
+        return predictions

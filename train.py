@@ -1,8 +1,10 @@
 import logging
+from pathlib import Path
 import pandas as pd
 import numpy as np
 import sys
-
+import plotly.graph_objects as go
+from sklearn import metrics
 from src.data.make_dataset import HamSpamDataset
 
 from src.models.perceptron import Perceptron, PerceptronSklearn
@@ -34,7 +36,9 @@ def init_dataset():
     return df_train, df_test
 
 
-def eval_model(model: Model, df_train: pd.DataFrame, df_test: pd.DataFrame):
+def eval_model(
+    model: Model, df_train: pd.DataFrame, df_test: pd.DataFrame
+) -> np.ndarray:
     """Train and evaluate a model on the given preprocessed datasets.
 
     Args:
@@ -53,7 +57,24 @@ def eval_model(model: Model, df_train: pd.DataFrame, df_test: pd.DataFrame):
     logger.info("Evaluating model: %s", model.name)
     labels_test = ldf_test["label"]
     features_test = ldf_test.drop("label", axis=1)
-    model.predict_and_evaluate(features_test.values, labels_test.values)
+    return model.predict_and_evaluate(features_test.values, labels_test.values)
+
+
+def save_scores_as_plots(
+    lmodels: list, lf1scores: list, laccscores: list, lrecallscores: list
+):
+    folder_path = "./img/"
+    Path(folder_path).mkdir(exist_ok=True)
+
+    fig = go.Figure(
+        data = [
+            go.Bar(name ="F1 Score", x=lmodels, y = lf1scores),
+            go.Bar(name ="Accuracy Score", x=lmodels, y = laccscores),
+            go.Bar(name ="Recall Score", x=lmodels, y = lrecallscores)
+        ]
+    )
+    fig.update_layout(barmode='group', template="seaborn")
+    fig.write_image(folder_path + "scores.png")
 
 
 def main():
@@ -75,9 +96,20 @@ def main():
         LogisticRegression(0.1, 20, standardize=True, name="Logistic-Regression-std"),
     ]
 
-    for model in models:
-        eval_model(model, df_train, df_test)
+    targets = df_test["label"]
+    lmodels = []
+    lf1scores = []
+    laccscores = []
+    lrecallscores = []
 
+    for model in models:
+        preds = eval_model(model, df_train, df_test)
+        lmodels.append(model.name)
+        lf1scores.append(metrics.f1_score(targets, preds))
+        laccscores.append(metrics.accuracy_score(targets, preds))
+        lrecallscores.append(metrics.recall_score(targets, preds))
+
+    save_scores_as_plots(lmodels,lf1scores,laccscores,lrecallscores)
 
 if __name__ == "__main__":
     main()

@@ -19,4 +19,8 @@ nix-shell
 python3 train.py
 ```
 
+## Model performances on dataset
+
+![Performance of models](./img/scores.png)
+
 

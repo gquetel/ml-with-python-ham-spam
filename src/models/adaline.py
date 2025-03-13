@@ -98,6 +98,7 @@ class Adaline(Model):
         predictions = self.predict(X)
         errors = np.sum(predictions != y)
         logger.info(f"Misclassification errors: {errors}")
+        return predictions
 
 
 class AdalineSGD(Model):
@@ -194,3 +195,4 @@ class AdalineSGD(Model):
         errors = np.sum(predictions != y)
         logger.info(f"Misclassification errors: {errors}")
         plot_losses_by_epoch(self._losses, self.name, "Mean Squared Error")
+        return predictions
