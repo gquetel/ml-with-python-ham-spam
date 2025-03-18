@@ -9,7 +9,7 @@ from src.data.make_dataset import HamSpamDataset
 
 from src.models.perceptron import Perceptron, PerceptronSklearn
 from src.models.adaline import Adaline, AdalineSGD
-from src.models.logress import LogisticRegression
+from src.models.logress import LogisticRegression, LogisticRegressionSklearn
 
 from src.models.model import Model
 from settings import BASE_PATH
@@ -84,7 +84,7 @@ def main():
     lr = 0.0001
     lr_std = 0.1 # Feature standardization allows higher convergence therefore we can use a higher LR value.
 
-    epochs = 20
+    epochs = 100
     models = [
         Perceptron(lr, epochs),
         Adaline(lr, epochs),
@@ -98,6 +98,7 @@ def main():
         PerceptronSklearn(lr, epochs),
         LogisticRegression(lr, epochs),
         LogisticRegression(lr_std, epochs, standardize=True, name="Logistic-Regression-std"),
+        LogisticRegressionSklearn(lr_std,epochs),
     ]
 
     targets = df_test["label"]

@@ -1,6 +1,9 @@
 import logging
 import numpy as np
 
+from sklearn.linear_model import LogisticRegression as skLR
+from sklearn.preprocessing import StandardScaler
+
 from settings import RANDOM_STATE
 from src.models.model import Model
 from src.utils.visualize import plot_losses_by_epoch
@@ -100,6 +103,50 @@ class LogisticRegression(Model):
             y (_type_): Target values
         """
         plot_losses_by_epoch(self._losses, self.name, "Log-likelihood loss")
+        predictions = self.predict(X)
+        errors = np.sum(predictions != y)
+        logger.info(f"Misclassification errors: {errors}")
+        return predictions
+
+
+class LogisticRegressionSklearn(Model):
+    """A wrapper class relying on the LogisticRegression class implemented by sklearn. """
+
+    def __init__(
+        self,
+        lr: float,
+        epochs: int,
+        name: str = "Logistic-Regression-sklearn",
+        random_state: int = RANDOM_STATE,
+    ):
+        self._name = name
+        self._model = skLR(C=100.0,max_iter=epochs, random_state=random_state)
+        self._scaler = StandardScaler()
+
+    def fit(self, X: np.ndarray, y: np.ndarray):
+        """Fit the model to the given data.
+        Before fitting the model, the features are standardized using the  StandardScaler class from sklearn.
+
+        Args:
+            X (np.ndarray): Training vectors
+            y (np.ndarray): Target values
+        """
+        X_std = self._scaler.fit_transform(X)
+        self._model.fit(X_std, y)
+
+    def predict(self, X: np.ndarray) -> np.ndarray:
+        """Classify samples X.
+
+        Args:
+            X (np.ndarray): Samples to predict.
+
+        Returns:
+            np.ndarray: Predictions
+        """
+        X_std = self._scaler.transform(X)
+        return self._model.predict(X_std)
+
+    def predict_and_evaluate(self, X: np.ndarray, y: np.ndarray):
         predictions = self.predict(X)
         errors = np.sum(predictions != y)
         logger.info(f"Misclassification errors: {errors}")
