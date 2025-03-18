@@ -80,20 +80,24 @@ def save_scores_as_plots(
 def main():
     init_logger()
     df_train, df_test = init_dataset()
+    
+    lr = 0.0001
+    lr_std = 0.1 # Feature standardization allows higher convergence therefore we can use a higher LR value.
 
+    epochs = 20
     models = [
-        Perceptron(0.01, 20),
-        Adaline(0.00005, 20),
+        Perceptron(lr, epochs),
+        Adaline(lr, epochs),
         Adaline(
-            0.1,
-            20,
+            lr_std,
+            epochs,
             standardize=True,
             name="Adaline-std",
         ),
-        AdalineSGD(0.01, 20),
-        PerceptronSklearn(0.01, 20),
-        LogisticRegression(0.001, 20),
-        LogisticRegression(0.1, 20, standardize=True, name="Logistic-Regression-std"),
+        AdalineSGD(lr, epochs),
+        PerceptronSklearn(lr, epochs),
+        LogisticRegression(lr, epochs),
+        LogisticRegression(lr_std, epochs, standardize=True, name="Logistic-Regression-std"),
     ]
 
     targets = df_test["label"]

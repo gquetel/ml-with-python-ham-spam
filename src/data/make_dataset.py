@@ -1,10 +1,12 @@
 import logging
 import multiprocessing as mp
 import spacy
+import string
 import pandas as pd
 from settings import RANDOM_STATE
 
 logger = logging.getLogger(__name__)
+
 
 class HamSpamDataset:
     """A Dataset class for Ham Spam message classification."""
@@ -33,9 +35,7 @@ class HamSpamDataset:
         Returns:
             tuple[pd.DataFrame, pd.DataFrame]: Train and test dataframes.
         """
-        suffled_data = self._processed_data.sample(
-            frac=1, random_state=RANDOM_STATE
-        )
+        suffled_data = self._processed_data.sample(frac=1, random_state=RANDOM_STATE)
         split_index = int(len(suffled_data) * (1 - test_size))
 
         df_train = suffled_data.iloc[:split_index]
@@ -62,7 +62,18 @@ class HamSpamDataset:
             char_count = len(doc.text)
             exclam_count = doc.text.count("!")
             question_count = doc.text.count("?")
-            uppercase_count = sum(1 for c in doc.text if c.isupper())
+
+            uppercase_count = 0
+            digit_count = 0
+            punct_count = 0
+
+            for c in doc.text:
+                if c.isupper():
+                    uppercase_count += 1
+                elif c in string.punctuation:
+                    punct_count += 1
+                elif c.isdigit():
+                    digit_count += 1
 
             url_count = 0
             pos_counts = {}
@@ -70,7 +81,6 @@ class HamSpamDataset:
 
             for token in doc:
                 pos_counts[token.pos_] = pos_counts.get(token.pos_, 0) + 1
-
                 if token.like_url:
                     url_count += 1
 
@@ -93,6 +103,8 @@ class HamSpamDataset:
                 "avg_tok_len": avg_tok_len,
                 "upper_ratio": upper_ratio,
                 "money_count": money_count,
+                "digit_count": digit_count,
+                "punct_count": punct_count,
             }
 
             for pos, count in pos_counts.items():
