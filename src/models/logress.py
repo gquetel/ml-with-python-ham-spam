@@ -110,17 +110,17 @@ class LogisticRegression(Model):
 
 
 class LogisticRegressionSklearn(Model):
-    """A wrapper class relying on the LogisticRegression class implemented by sklearn. """
+    """A wrapper class relying on the LogisticRegression class implemented by sklearn."""
 
     def __init__(
         self,
-        lr: float,
         epochs: int,
+        C: float = 100,
         name: str = "Logistic-Regression-sklearn",
         random_state: int = RANDOM_STATE,
     ):
         self._name = name
-        self._model = skLR(C=100.0,max_iter=epochs, random_state=random_state)
+        self._model = skLR(C=C, max_iter=epochs, random_state=random_state)
         self._scaler = StandardScaler()
 
     def fit(self, X: np.ndarray, y: np.ndarray):

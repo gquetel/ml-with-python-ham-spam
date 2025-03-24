@@ -10,6 +10,7 @@ from src.data.make_dataset import HamSpamDataset
 from src.models.perceptron import Perceptron, PerceptronSklearn
 from src.models.adaline import Adaline, AdalineSGD
 from src.models.logress import LogisticRegression, LogisticRegressionSklearn
+from src.models.SVM import SVCLin, SVCRBF
 
 from src.models.model import Model
 from settings import BASE_PATH
@@ -67,24 +68,24 @@ def save_scores_as_plots(
     Path(folder_path).mkdir(exist_ok=True)
 
     fig = go.Figure(
-        data = [
-            go.Bar(name ="F1 Score", x=lmodels, y = lf1scores),
-            go.Bar(name ="Accuracy Score", x=lmodels, y = laccscores),
-            go.Bar(name ="Recall Score", x=lmodels, y = lrecallscores)
+        data=[
+            go.Bar(name="F1 Score", x=lmodels, y=lf1scores),
+            go.Bar(name="Accuracy Score", x=lmodels, y=laccscores),
+            go.Bar(name="Recall Score", x=lmodels, y=lrecallscores),
         ]
     )
-    fig.update_layout(barmode='group', template="seaborn")
+    fig.update_layout(barmode="group", template="seaborn")
     fig.write_image(folder_path + "scores.png")
 
 
 def main():
     init_logger()
     df_train, df_test = init_dataset()
-    
-    lr = 0.0001
-    lr_std = 0.1 # Feature standardization allows higher convergence therefore we can use a higher LR value.
 
-    epochs = 100
+    lr = 0.0001
+    lr_std = 0.1  # Feature standardization allows higher convergence therefore we can use a higher LR value.
+
+    epochs = 50
     models = [
         Perceptron(lr, epochs),
         Adaline(lr, epochs),
@@ -96,9 +97,13 @@ def main():
         ),
         AdalineSGD(lr, epochs),
         PerceptronSklearn(lr, epochs),
-        LogisticRegression(lr, epochs),
-        LogisticRegression(lr_std, epochs, standardize=True, name="Logistic-Regression-std"),
-        LogisticRegressionSklearn(lr_std,epochs),
+        LogisticRegression(0.005, epochs),
+        LogisticRegression(
+            lr_std, epochs, standardize=True, name="Logistic-Regression-std"
+        ),
+        LogisticRegressionSklearn(epochs, C=100),
+        SVCLin(1.0),
+        SVCRBF(10.0),
     ]
 
     targets = df_test["label"]
@@ -114,7 +119,8 @@ def main():
         laccscores.append(metrics.accuracy_score(targets, preds))
         lrecallscores.append(metrics.recall_score(targets, preds))
 
-    save_scores_as_plots(lmodels,lf1scores,laccscores,lrecallscores)
+    save_scores_as_plots(lmodels, lf1scores, laccscores, lrecallscores)
+
 
 if __name__ == "__main__":
     main()
