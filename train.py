@@ -87,22 +87,22 @@ def main():
     feature_names = list(df_train.columns)
     epochs = 50
     models = [
-        # Perceptron(lr, epochs),
-        # Adaline(lr, epochs),
-        # Adaline(
-        #     lr_std,
-        #     epochs,
-        #     standardize=True,
-        #     name="Adaline-std",
-        # ),
-        # AdalineSGD(lr, epochs),
-        # PerceptronSklearn(lr, epochs),
-        # LogisticRegression(0.005, epochs),
-        # LogisticRegression(
-        #     lr_std, epochs, standardize=True, name="Logistic-Regression-std"
-        # ),
-        # LogisticRegressionSklearn(epochs, C=100),
-        # SVCLin(1.0),
+        Perceptron(lr, epochs),
+        Adaline(lr, epochs),
+        Adaline(
+            lr_std,
+            epochs,
+            standardize=True,
+            name="Adaline-std",
+        ),
+        AdalineSGD(lr, epochs),
+        PerceptronSklearn(lr, epochs),
+        LogisticRegression(0.005, epochs),
+        LogisticRegression(
+            lr_std, epochs, standardize=True, name="Logistic-Regression-std"
+        ),
+        LogisticRegressionSklearn(epochs, C=100),
+        SVCLin(1.0),
         SVCRBF(10.0),
         DecisionTree(column_names=feature_names),
         DecisionTree(
