@@ -10,6 +10,7 @@ let
     ps.scikit-learn
     ps.plotly
     ps.kaleido
+    ps.matplotlib
   ]);
 in
 pkgs.mkShell rec {

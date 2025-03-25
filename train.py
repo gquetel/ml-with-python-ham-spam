@@ -11,6 +11,7 @@ from src.models.perceptron import Perceptron, PerceptronSklearn
 from src.models.adaline import Adaline, AdalineSGD
 from src.models.logress import LogisticRegression, LogisticRegressionSklearn
 from src.models.SVM import SVCLin, SVCRBF
+from src.models.trees import DecisionTree, RandomForest
 
 from src.models.model import Model
 from settings import BASE_PATH
@@ -50,12 +51,11 @@ def eval_model(
     ldf_train = df_train.copy()
     ldf_test = df_test.copy()
 
-    logger.info("Training model: %s", model.name)
+    logger.info("Training and testing model: %s", model.name)
     labels = ldf_train["label"]
     features = ldf_train.drop("label", axis=1)
     model.fit(features.values, labels.values)
 
-    logger.info("Evaluating model: %s", model.name)
     labels_test = ldf_test["label"]
     features_test = ldf_test.drop("label", axis=1)
     return model.predict_and_evaluate(features_test.values, labels_test.values)
@@ -84,26 +84,32 @@ def main():
 
     lr = 0.0001
     lr_std = 0.1  # Feature standardization allows higher convergence therefore we can use a higher LR value.
-
+    feature_names = list(df_train.columns)
     epochs = 50
     models = [
-        Perceptron(lr, epochs),
-        Adaline(lr, epochs),
-        Adaline(
-            lr_std,
-            epochs,
-            standardize=True,
-            name="Adaline-std",
-        ),
-        AdalineSGD(lr, epochs),
-        PerceptronSklearn(lr, epochs),
-        LogisticRegression(0.005, epochs),
-        LogisticRegression(
-            lr_std, epochs, standardize=True, name="Logistic-Regression-std"
-        ),
-        LogisticRegressionSklearn(epochs, C=100),
-        SVCLin(1.0),
+        # Perceptron(lr, epochs),
+        # Adaline(lr, epochs),
+        # Adaline(
+        #     lr_std,
+        #     epochs,
+        #     standardize=True,
+        #     name="Adaline-std",
+        # ),
+        # AdalineSGD(lr, epochs),
+        # PerceptronSklearn(lr, epochs),
+        # LogisticRegression(0.005, epochs),
+        # LogisticRegression(
+        #     lr_std, epochs, standardize=True, name="Logistic-Regression-std"
+        # ),
+        # LogisticRegressionSklearn(epochs, C=100),
+        # SVCLin(1.0),
         SVCRBF(10.0),
+        DecisionTree(column_names=feature_names),
+        DecisionTree(
+            max_depth=4, name="DecisionTree-depth4", column_names=feature_names
+        ),
+        RandomForest(),
+        RandomForest(max_depth=4, name="RandomForest-depth4"),
     ]
 
     targets = df_test["label"]
