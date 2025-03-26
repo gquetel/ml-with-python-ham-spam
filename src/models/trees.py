@@ -57,6 +57,9 @@ class DecisionTree(Model):
     def fit(self, X: np.ndarray, y: np.ndarray):
         """Fit the model to the given data.
 
+        If column names were provided to the object, the function 
+        also calls the plot_and_save_tree function.
+
         Args:
             X (np.ndarray): Training vectors
             y (np.ndarray): Target values
@@ -66,14 +69,6 @@ class DecisionTree(Model):
             plot_and_save_tree(self._model, self._name, self._column_names)
 
     def predict(self, X: np.ndarray) -> np.ndarray:
-        """Classify samples X.
-
-        Args:
-            X (np.ndarray): Samples to predict.
-
-        Returns:
-            np.ndarray: Predictions
-        """
         return self._model.predict(X)
 
     def predict_and_evaluate(self, X: np.ndarray, y: np.ndarray):
@@ -88,6 +83,10 @@ class RandomForest(Model):
     """A Random Forest classifier model.
 
     This class is a wrapper around the sklearn.ensemble.RandomForestClassifier class.
+    - max_samples hyperparameter bounds the number of samples used to grow each 
+    tree. By default, the model uses all samples in training dataset. Reducing
+    this value can lead to higher diversity of grown trees. 
+
     """
 
     def __init__(
@@ -98,27 +97,13 @@ class RandomForest(Model):
     ):
         self._name = name
         self._model = RandomForestClassifier(
-            criterion="gini", max_depth=max_depth, random_state=random_state
+            criterion="gini", max_depth=max_depth, random_state=random_state, n_jobs=-1
         )
 
     def fit(self, X: np.ndarray, y: np.ndarray):
-        """Fit the model to the given data.
-
-        Args:
-            X (np.ndarray): Training vectors
-            y (np.ndarray): Target values
-        """
         self._model.fit(X, y)
 
     def predict(self, X: np.ndarray) -> np.ndarray:
-        """Classify samples X.
-
-        Args:
-            X (np.ndarray): Samples to predict.
-
-        Returns:
-            np.ndarray: Predictions
-        """
         return self._model.predict(X)
 
     def predict_and_evaluate(self, X: np.ndarray, y: np.ndarray):

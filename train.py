@@ -12,6 +12,7 @@ from src.models.adaline import Adaline, AdalineSGD
 from src.models.logress import LogisticRegression, LogisticRegressionSklearn
 from src.models.SVM import SVCLin, SVCRBF
 from src.models.trees import DecisionTree, RandomForest
+from src.models.knn import KNN
 
 from src.models.model import Model
 from settings import BASE_PATH
@@ -74,7 +75,13 @@ def save_scores_as_plots(
             go.Bar(name="Recall Score", x=lmodels, y=lrecallscores),
         ]
     )
-    fig.update_layout(barmode="group", template="seaborn")
+    fig.update_layout(
+        autosize=False,
+        width=1000, # Increment value when more models are added.
+        height=500,
+        barmode="group",
+        template="seaborn",
+    )
     fig.write_image(folder_path + "scores.png")
 
 
@@ -110,6 +117,10 @@ def main():
         ),
         RandomForest(),
         RandomForest(max_depth=4, name="RandomForest-depth4"),
+        KNN(),
+        KNN(metric="cosine",name="5-NN-cosine"),
+        KNN(name="3-NN-cosine", n_neighbors=3)
+
     ]
 
     targets = df_test["label"]

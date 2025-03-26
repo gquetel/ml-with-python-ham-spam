@@ -42,14 +42,6 @@ class SVCLin(Model):
         self._model.fit(X_std, y)
 
     def predict(self, X: np.ndarray) -> np.ndarray:
-        """Classify samples X.
-
-        Args:
-            X (np.ndarray): Samples to predict.
-
-        Returns:
-            np.ndarray: Predictions
-        """
         X_std = self._scaler.transform(X)
         return self._model.predict(X_std)
 
@@ -57,7 +49,6 @@ class SVCLin(Model):
         predictions = self.predict(X)
         errors = np.sum(predictions != y)
         logger.info(f"Misclassification errors: {errors}")
-
         return predictions
 
 
@@ -83,6 +74,7 @@ class SVCRBF(Model):
 
     def fit(self, X: np.ndarray, y: np.ndarray):
         """Fit the model to the given data.
+
         Before fitting the model, the features are standardized using the  StandardScaler class from sklearn.
 
         Args:
@@ -93,14 +85,6 @@ class SVCRBF(Model):
         self._model.fit(X_std, y)
 
     def predict(self, X: np.ndarray) -> np.ndarray:
-        """Classify samples X.
-
-        Args:
-            X (np.ndarray): Samples to predict.
-
-        Returns:
-            np.ndarray: Predictions
-        """
         X_std = self._scaler.transform(X)
         return self._model.predict(X_std)
 

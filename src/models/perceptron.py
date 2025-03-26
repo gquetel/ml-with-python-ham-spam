@@ -89,14 +89,6 @@ class PerceptronSklearn(Model):
         self._model.fit(X_std, y)
 
     def predict(self, X: np.ndarray) -> np.ndarray:
-        """Classify samples X.
-
-        Args:
-            X (np.ndarray): Samples to predict.
-
-        Returns:
-            np.ndarray: Predictions
-        """
         X_std = self._scaler.transform(X)
         return self._model.predict(X_std)
 
